@@ -1,0 +1,208 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:SpectralSynthesizer">
+
+    <!-- GroupBox -->
+    <Style TargetType="{x:Type local:GroupBoxCustomControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:GroupBoxCustomControl}">
+                    <Grid
+                        Margin="{TemplateBinding Margin}"
+                        Background="{StaticResource ForegroundDarkBrush}">
+                        <Grid
+                            Margin="1"
+                            Background="{StaticResource BackgroundIntermediateBrush}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Button
+                                Style="{StaticResource EmptyButtonStyle}"
+                                Command="{TemplateBinding TitleLeftClickedCommand}"
+                                HorizontalAlignment="Stretch"
+                                Grid.Row="0">
+                                <Grid
+                                    Background="Transparent"
+                                    Margin="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock
+                                        Margin="5 0 0 0"
+                                        Grid.Column="0"
+                                        Foreground="{StaticResource ForegroundIntermediateBrush }"
+                                        HorizontalAlignment="Left"
+                                        Text="{TemplateBinding Title}"/>
+                                    <Grid
+                                        Grid.Column="1">
+                                        <!-- open triangle -->
+                                        <Path
+                                            Margin="2"
+                                            Visibility="{TemplateBinding IsOpen, Converter={local:BooleanToCollapsedVisibilityConverter}}"
+                                            VerticalAlignment="Center"
+                                            Height="8"
+                                            Width="12"
+                                            Stroke="{StaticResource ForegroundLightBrush }"
+                                            StrokeThickness="1">
+                                            <Path.Data>
+                                                <GeometryGroup>
+                                                    <LineGeometry StartPoint="0,0" EndPoint="6, 8" />
+                                                    <LineGeometry StartPoint="6,8" EndPoint="12, 0" />
+                                                </GeometryGroup>
+                                            </Path.Data>
+                                        </Path>
+                                        <!-- closed triangle -->
+                                        <Path
+                                            Margin="2"
+                                            Visibility="{TemplateBinding IsOpen, Converter={local:BooleanToCollapsedVisibilityConverter}, ConverterParameter=_}"
+                                            VerticalAlignment="Center"
+                                            Height="8"
+                                            Width="12"
+                                            Stroke="{Binding ProjectViewModel.Theme,
+                                                    Source={x:Static local:ViewModelLocator.Instance},
+                                                    Converter={local:ApplicationThemeToBackgroundColorConverter}}"
+                                            StrokeThickness="1">
+                                            <Path.Data>
+                                                <GeometryGroup>
+                                                    <LineGeometry StartPoint="0,8" EndPoint="6, 0" />
+                                                    <LineGeometry StartPoint="6,0" EndPoint="12, 8" />
+                                                </GeometryGroup>
+                                            </Path.Data>
+                                        </Path>
+                                    </Grid>
+                                </Grid>
+                            </Button>
+                            <ContentPresenter
+                                Margin="5"
+                                Visibility="{TemplateBinding IsOpen, Converter={local:BooleanToCollapsedVisibilityConverter}}"
+                                Grid.Row="1"/>
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- CheckGroupBox -->
+    <Style x:Key="checkGroupBoxStyle"  TargetType="{x:Type local:GroupBoxCustomControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:GroupBoxCustomControl}">
+                    <Grid
+                        Margin="{TemplateBinding Margin}"
+                        Background="{StaticResource ForegroundDarkBrush}">
+                        <Grid
+                            Margin="1"
+                            Background="{StaticResource BackgroundIntermediateBrush}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Button
+                                Style="{StaticResource EmptyButtonStyle}"
+                                Command="{TemplateBinding TitleLeftClickedCommand}"
+                                HorizontalAlignment="Stretch"
+                                Grid.Row="0">
+                                <Grid
+                                    Background="Transparent"
+                                    Margin="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock
+                                        Margin="5 0 0 0"
+                                        Grid.Column="0"
+                                        Foreground="{StaticResource ForegroundIntermediateBrush }"
+                                        HorizontalAlignment="Left"
+                                        Text="{TemplateBinding Title}"/>
+                                    <Grid
+                                        Grid.Column="1">
+                                        <!-- enabled open / close checkbox -->
+                                        <Border
+                                            VerticalAlignment="Center"
+                                            Width="12"
+                                            Height="12"
+                                            Margin="2"
+                                            Panel.ZIndex="0"
+                                            Visibility="{TemplateBinding IsInteractable, Converter={local:BooleanToCollapsedVisibilityConverter}}"
+                                            Background="{Binding ProjectViewModel.Theme,
+                                                        Source={x:Static local:ViewModelLocator.Instance},
+                                                        Converter={local:ApplicationThemeToBackgroundColorConverter}}">
+                                            <Border
+                                                Background="{StaticResource BackgroundIntermediateBrush}"
+                                                Margin="1">
+                                                <Grid
+                                                    Margin="2"
+                                                    Background="{Binding ProjectViewModel.Theme,
+                                                                Source={x:Static local:ViewModelLocator.Instance},
+                                                                Converter={local:ApplicationThemeToBackgroundColorConverter}}"
+                                                    Visibility="{TemplateBinding IsOpen, Converter={local:BooleanToCollapsedVisibilityConverter}}"/>
+                                            </Border>
+                                        </Border>
+                                        <!-- disabled open / close checkbox -->
+                                        <Border
+                                            VerticalAlignment="Center"
+                                            Width="12"
+                                            Height="12"
+                                            Margin="2"
+                                            Panel.ZIndex="1"
+                                            Visibility="{TemplateBinding IsInteractable, Converter={local:BooleanToCollapsedVisibilityConverter}, ConverterParameter=_}"
+                                            Background="{StaticResource ForegroundDarkBrush}">
+                                            <Border
+                                                Background="{StaticResource BackgroundIntermediateBrush}"
+                                                Margin="1">
+                                                <Grid
+                                                    Margin="2"
+                                                    Background="{StaticResource ForegroundDarkBrush}"
+                                                    Visibility="{TemplateBinding IsOpen, Converter={local:BooleanToCollapsedVisibilityConverter}}"/>
+                                            </Border>
+                                        </Border>
+                                    </Grid>
+                                </Grid>
+                            </Button>
+                            <ContentPresenter
+                                Margin="5"
+                                Visibility="{TemplateBinding IsOpen, Converter={local:BooleanToCollapsedVisibilityConverter}}"
+                                Grid.Row="1"/>
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- AudioBufferBorder -->
+    <Style TargetType="{x:Type local:AudioBufferBorderCustomControl}">
+        <Setter Property="Margin" Value="2"/>
+        <Setter Property="Background" Value="{Binding State,Converter={local:AudioBufferStateToSolidColorBrushConverter}}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:AudioBufferBorderCustomControl}">
+                    <Button 
+                        Style="{StaticResource EmptyButtonStyle}"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Padding="0"
+                        Margin="0"
+                        Command="{TemplateBinding LeftClickCommand}">
+                        <Grid
+                            Margin="{TemplateBinding Margin}"
+                            Background="{TemplateBinding Background}"
+                            x:Name="grid">
+                            <Grid
+                                Background="{StaticResource BackgroundDarkBrush}"
+                                Margin="1">
+                                <ContentPresenter
+                                    Margin="5"/>
+                            </Grid>
+                        </Grid>
+                    </Button>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

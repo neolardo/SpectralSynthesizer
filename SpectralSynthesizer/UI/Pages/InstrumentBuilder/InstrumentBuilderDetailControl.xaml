@@ -1,0 +1,390 @@
+﻿<UserControl
+    x:Class="SpectralSynthesizer.InstrumentBuilderDetailControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:SpectralSynthesizer"
+    mc:Ignorable="d" 
+    x:Name="instrumentBuilder"
+    d:DesignHeight="800" d:DesignWidth="300">
+    <ScrollViewer 
+        VerticalScrollBarVisibility="Hidden" 
+        HorizontalScrollBarVisibility="Disabled" 
+        Style="{StaticResource DetailScrollViewer}">
+        <StackPanel 
+            Margin="2 0">
+            <TextBlock
+                HorizontalAlignment="Center"
+                Text="INSTRUMENT BUILDER"
+                FontFamily="{StaticResource RobotoCondensedLight}"
+                FontSize="{StaticResource FontSizeM}"
+                Foreground="{Binding ProjectViewModel.Theme,
+                            Source={x:Static local:ViewModelLocator.Instance},
+                            Converter={local:ApplicationThemeToBackgroundColorConverter}}"
+                Margin="0 20"
+                local:DescriptionProperty.Value="{Binding IsMouseOver,
+                    RelativeSource={RelativeSource Self},
+                    Converter={local:DescriptionConverter},
+                    ConverterParameter=instrumentbuilder}"/>
+            <TextBlock
+                Text="instruments"
+                Margin="0 15 0 5"
+                AllowDrop="true"
+                HorizontalAlignment="Left"
+                Drop="InstrumentsCombo_Drop"
+                local:DescriptionProperty.Value="{Binding IsMouseOver,
+                    RelativeSource={RelativeSource Self},
+                    Converter={local:DescriptionConverter},
+                    ConverterParameter=instrument}"/>
+            <Grid
+                VerticalAlignment="Center"
+                Margin="0 0 0 3">
+                <Grid.ColumnDefinitions >
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button
+                    x:Name="addBtn"
+                    Grid.Column="0"
+                    Command="{Binding AddInstrumentCommand}"
+                    Content="add"
+                    Margin="0 2 2 2"
+                    local:DescriptionProperty.Value="{Binding IsMouseOver,
+                        RelativeSource={RelativeSource Self},
+                        Converter={local:DescriptionConverter},
+                        ConverterParameter=instrument_add}"/>
+                <Button
+                    x:Name="removeBtn"
+                    Grid.Column="1"
+                    Command="{Binding RemoveInstrumentCommand}" 
+                    Content="remove"
+                    Margin="2 2 0 2"
+                    local:DescriptionProperty.Value="{Binding IsMouseOver,
+                        RelativeSource={RelativeSource Self},
+                        Converter={local:DescriptionConverter},
+                        ConverterParameter=instrument_remove}"/>
+            </Grid>
+            <local:ComboBox
+                x:Name="instrumentCombo"
+                Margin="0 0 0 5"
+                AllowDrop="true"
+                Drop="InstrumentsCombo_Drop"
+                DataContext="{Binding InstrumentsComboBox}"
+                HorizontalAlignment="Stretch"
+                IsScrollOnlyVisibleOnHover="True"
+                ComboHeight="{Binding InstrumentsComboBoxHeight}"     
+                local:DescriptionProperty.Value="{Binding IsMouseOver,
+                    RelativeSource={RelativeSource Self},
+                    Converter={local:DescriptionConverter},
+                    ConverterParameter=instrument_sono}"/>
+            <local:GroupBoxCustomControl
+                Margin="0 10 0 5"
+                IsOpen="{Binding IsWaveToMidiGroupBoxOpen, Mode=TwoWay}"
+                Title="wave to midi conversion">
+                <StackPanel 
+                    HorizontalAlignment="Stretch">
+                    <local:CheckBox
+                        MainColor="{Binding ProjectViewModel.Theme,
+                                            Source={x:Static local:ViewModelLocator.Instance},
+                                            Converter={local:ApplicationThemeToBackgroundColorConverter}}"
+                        Checked="{Binding ConversionSelectionOnly, Mode=TwoWay}"
+                        Enabled="{Binding IsWaveToMidiConversionEnabled}"
+                        Text="selected area"
+                        Margin="0 0 0 10"
+                        local:DescriptionProperty.Value="{Binding IsMouseOver,
+                            RelativeSource={RelativeSource Self},
+                            Converter={local:DescriptionConverter},
+                            ConverterParameter=instrument_conversion_selection}"/>
+                    <local:LabelledSlider
+                        x:Name="conversionAmplitudeSlider"
+                        Margin="0 5"
+                        DataContext="{Binding ConversionMinimumDecibelAmplitude}"
+                        MinimumValue="{Binding Minimum}"
+                        MaximumValue="{Binding Maximum}"
+                        Value="{Binding Value, Mode=TwoWay}"
+                        Label="minimum amplitude"
+                        Text="{Binding Value, Converter={local:SliderValueToStringConverter}, ConverterParameter=decibel}"
+                        IsInteractable="{Binding DataContext.IsWaveToMidiConversionEnabled, ElementName=instrumentBuilder}"
+                        local:DescriptionProperty.Value="{Binding IsMouseOver,
+                            RelativeSource={RelativeSource Self},
+                            Converter={local:DescriptionConverter},
+                            ConverterParameter=instrument_conversion_amplitude}"/>
+                    <local:LabelledSlider
+                        x:Name="conversionLengthSlider"
+                        Margin="0 5"
+                        DataContext="{Binding ConversionMinimumLength}"
+                        MinimumValue="{Binding Minimum}"
+                        MaximumValue="{Binding Maximum}"
+                        Value="{Binding Value, Mode=TwoWay}"
+                        Label="minimum length"
+                        Text="{Binding Value, Converter={local:SliderValueToStringConverter}, ConverterParameter=millisecond}"
+                        IsInteractable="{Binding DataContext.IsWaveToMidiConversionEnabled, ElementName=instrumentBuilder}"
+                        local:DescriptionProperty.Value="{Binding IsMouseOver,
+                            RelativeSource={RelativeSource Self},
+                            Converter={local:DescriptionConverter},
+                            ConverterParameter=instrument_conversion_length}"/>
+                    <local:LabelledSlider
+                        x:Name="conversionSilenceSlider"
+                        Margin="0 5"
+                        DataContext="{Binding ConversionMaximumSilence}"
+                        MinimumValue="{Binding Minimum}"
+                        MaximumValue="{Binding Maximum}"
+                        Value="{Binding Value, Mode=TwoWay}"
+                        Label="maximum silence"
+                        Text="{Binding Value, Converter={local:SliderValueToStringConverter}, ConverterParameter=millisecond}"
+                        IsInteractable="{Binding DataContext.IsWaveToMidiConversionEnabled, ElementName=instrumentBuilder}"
+                        local:DescriptionProperty.Value="{Binding IsMouseOver,
+                            RelativeSource={RelativeSource Self},
+                            Converter={local:DescriptionConverter},
+                            ConverterParameter=instrument_conversion_silence}"/>
+                    <Grid
+                        VerticalAlignment="Center"
+                        Margin="0">
+                        <Grid.ColumnDefinitions >
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button
+                            Grid.Column="0"
+                            Command="{Binding ConvertWaveToMidiCommand}"
+                            Content="convert"
+                            Margin="0 0 2 0"
+                            IsEnabled="{Binding IsWaveToMidiConversionEnabled}"
+                            local:DescriptionProperty.Value="{Binding IsMouseOver,
+                                RelativeSource={RelativeSource Self},
+                                Converter={local:DescriptionConverter},
+                                ConverterParameter=instrument_convert_wave_to_midi}"/>
+                        <Button
+                            Grid.Column="1"
+                            Command="{Binding ClearMidiCommand}" 
+                            Content="clear"
+                            Margin="2 0 0 0"
+                            IsEnabled="{Binding IsWaveToMidiConversionEnabled}"
+                            local:DescriptionProperty.Value="{Binding IsMouseOver,
+                                RelativeSource={RelativeSource Self},
+                                Converter={local:DescriptionConverter},
+                                ConverterParameter=instrument_clear_midi}"/>
+                    </Grid>
+                </StackPanel>
+            </local:GroupBoxCustomControl>
+            <local:GroupBoxCustomControl
+                Margin="0 10 0 10"
+                IsOpen="{Binding IsInstrumentGenerationGroupBoxOpen, Mode=TwoWay}"
+                Title="instrument generation">
+                <StackPanel 
+                    HorizontalAlignment="Stretch">
+                    <local:CheckBox
+                        MainColor="{Binding ProjectViewModel.Theme,
+                                            Source={x:Static local:ViewModelLocator.Instance},
+                                            Converter={local:ApplicationThemeToBackgroundColorConverter}}"
+                        Checked="{Binding IsNoteOverwritingEnabled, Mode=TwoWay}"
+                        Enabled="{Binding IsInstrumentGenerationEnabled}"
+                        Text="overwrite notes"
+                        Margin="0 0 0 10"
+                        local:DescriptionProperty.Value="{Binding IsMouseOver,
+                            RelativeSource={RelativeSource Self},
+                            Converter={local:DescriptionConverter},
+                            ConverterParameter=instrument_conversion_selection}"/>
+                    <local:GroupBoxCustomControl
+                        Style ="{StaticResource checkGroupBoxStyle}"
+                        IsInteractable="{Binding IsInstrumentGenerationEnabled}"
+                        Margin="0 0 0 5"
+                        IsOpen="{Binding IsInstrumentGenerationSinusoidGroupBoxOpen, Mode=TwoWay}"
+                        Title="sinusoid">
+                        <StackPanel 
+                            HorizontalAlignment="Stretch">
+                            <local:CheckBox
+                                MainColor="{Binding ProjectViewModel.Theme,
+                                                    Source={x:Static local:ViewModelLocator.Instance},
+                                                    Converter={local:ApplicationThemeToBackgroundColorConverter}}"
+                                Checked="{Binding AreFrequenciesFixed, Mode=TwoWay}"
+                                Enabled="{Binding IsInstrumentGenerationEnabled}"
+                                Text="constant frequencies"
+                                Margin="0 0 0 10"
+                                local:DescriptionProperty.Value="{Binding IsMouseOver,
+                                    RelativeSource={RelativeSource Self},
+                                    Converter={local:DescriptionConverter},
+                                    ConverterParameter=instrument_conversion_selection}"/>
+                            <local:LabelledSlider
+                                x:Name="sinusoidAmplitudeSlider"
+                                Margin="0 5"
+                                DataContext="{Binding SinusoidMinimumDecibelAmplitude}"
+                                MinimumValue="{Binding Minimum}"
+                                MaximumValue="{Binding Maximum}"
+                                Value="{Binding Value, Mode=TwoWay}"
+                                Label="minimum amplitude"
+                                Text="{Binding Value, Converter={local:SliderValueToStringConverter}, ConverterParameter=decibel}"
+                                IsInteractable="{Binding DataContext.IsInstrumentGenerationEnabled, ElementName=instrumentBuilder}"
+                                local:DescriptionProperty.Value="{Binding IsMouseOver,
+                                    RelativeSource={RelativeSource Self},
+                                    Converter={local:DescriptionConverter},
+                                    ConverterParameter=todo}"/>
+                            <local:LabelledSlider
+                                x:Name="sinusoidSleepingTimeSlider"
+                                Margin="0 5"
+                                DataContext="{Binding SinusoidMaximumSleepingTime}"
+                                MinimumValue="{Binding Minimum}"
+                                MaximumValue="{Binding Maximum}"
+                                Value="{Binding Value, Mode=TwoWay}"
+                                Label="maximum sleeping time"
+                                Text="{Binding Value, Converter={local:SliderValueToStringConverter}, ConverterParameter=millisecond}"
+                                IsInteractable="{Binding DataContext.IsInstrumentGenerationEnabled, ElementName=instrumentBuilder}"
+                                local:DescriptionProperty.Value="{Binding IsMouseOver,
+                                    RelativeSource={RelativeSource Self},
+                                    Converter={local:DescriptionConverter},
+                                    ConverterParameter=todo}"/>
+                            <local:LabelledSlider
+                                x:Name="sinusoidMinimumLength"
+                                Margin="0 5"
+                                DataContext="{Binding SinusoidMinimumLength}"
+                                MinimumValue="{Binding Minimum}"
+                                MaximumValue="{Binding Maximum}"
+                                Value="{Binding Value, Mode=TwoWay}"
+                                Label="minimum length"
+                                Text="{Binding Value, Converter={local:SliderValueToStringConverter}, ConverterParameter=millisecond}"
+                                IsInteractable="{Binding DataContext.IsInstrumentGenerationEnabled, ElementName=instrumentBuilder}"
+                                local:DescriptionProperty.Value="{Binding IsMouseOver,
+                                    RelativeSource={RelativeSource Self},
+                                    Converter={local:DescriptionConverter},
+                                    ConverterParameter=todo}"/>
+                            <local:LabelledSlider
+                                x:Name="sinusoidContinuationRangeSlider"
+                                Margin="0 5"
+                                DataContext="{Binding SinusoidContinuationRange}"
+                                MinimumValue="{Binding Minimum}"
+                                MaximumValue="{Binding Maximum}"
+                                Value="{Binding Value, Mode=TwoWay}"
+                                Label="continuation range"
+                                Text="{Binding Value, Converter={local:SliderValueToStringConverter}, ConverterParameter=.2}"
+                                IsInteractable="{Binding DataContext.IsInstrumentGenerationEnabled, ElementName=instrumentBuilder}"
+                                local:DescriptionProperty.Value="{Binding IsMouseOver,
+                                    RelativeSource={RelativeSource Self},
+                                    Converter={local:DescriptionConverter},
+                                    ConverterParameter=todo}"/>
+                        </StackPanel>
+                    </local:GroupBoxCustomControl>
+                    <local:GroupBoxCustomControl
+                        Style ="{StaticResource checkGroupBoxStyle}"
+                        IsInteractable="{Binding IsInstrumentGenerationEnabled}"
+                        Margin="0 0 0 5"
+                        IsOpen="{Binding IsInstrumentGenerationTransientGroupBoxOpen, Mode=TwoWay}"
+                        Title="transient">
+                        <StackPanel 
+                            HorizontalAlignment="Stretch">
+                            <local:CheckBox
+                                MainColor="{Binding ProjectViewModel.Theme,
+                                                    Source={x:Static local:ViewModelLocator.Instance},
+                                                    Converter={local:ApplicationThemeToBackgroundColorConverter}}"
+                                Checked="{Binding TransientIsTransposable, Mode=TwoWay}"
+                                Enabled="{Binding IsInstrumentGenerationEnabled}"
+                                Text="transposable"
+                                Margin="0 0 0 10"
+                                local:DescriptionProperty.Value="{Binding IsMouseOver,
+                                    RelativeSource={RelativeSource Self},
+                                    Converter={local:DescriptionConverter},
+                                    ConverterParameter=instrument_conversion_selection}"/>
+                            <local:LabelledSlider
+                                x:Name="transientStrengthSlider"
+                                Margin="0 5"
+                                DataContext="{Binding TransientStrength}"
+                                MinimumValue="{Binding Minimum}"
+                                MaximumValue="{Binding Maximum}"
+                                Value="{Binding Value, Mode=TwoWay}"
+                                Label="strength"
+                                Text="{Binding Value, Converter={local:SliderValueToStringConverter}, ConverterParameter=.2}"
+                                IsInteractable="{Binding DataContext.IsInstrumentGenerationEnabled, ElementName=instrumentBuilder}"
+                                local:DescriptionProperty.Value="{Binding IsMouseOver,
+                                    RelativeSource={RelativeSource Self},
+                                    Converter={local:DescriptionConverter},
+                                    ConverterParameter=todo}"/>
+                            <local:LabelledSlider
+                                x:Name="transientAdjacencyNumberSlider"
+                                Margin="0 5"
+                                DataContext="{Binding TransientAdjacencyNumber}"
+                                MinimumValue="{Binding Minimum}"
+                                MaximumValue="{Binding Maximum}"
+                                Value="{Binding Value, Mode=TwoWay}"
+                                Label="adjacency number"
+                                Text="{Binding Value, Converter={local:SliderValueToStringConverter}, ConverterParameter=.0}"
+                                IsInteractable="{Binding DataContext.IsInstrumentGenerationEnabled, ElementName=instrumentBuilder}"
+                                local:DescriptionProperty.Value="{Binding IsMouseOver,
+                                    RelativeSource={RelativeSource Self},
+                                    Converter={local:DescriptionConverter},
+                                    ConverterParameter=todo}"/>
+                            <local:LabelledSlider
+                                x:Name="transientFlagRatioSlider"
+                                Margin="0 5"
+                                DataContext="{Binding TransientFlagRatio}"
+                                MinimumValue="{Binding Minimum}"
+                                MaximumValue="{Binding Maximum}"
+                                Value="{Binding Value, Mode=TwoWay}"
+                                Label="flag ratio"
+                                Text="{Binding Value, Converter={local:SliderValueToStringConverter}, ConverterParameter=.2}"
+                                IsInteractable="{Binding DataContext.IsInstrumentGenerationEnabled, ElementName=instrumentBuilder}"
+                                local:DescriptionProperty.Value="{Binding IsMouseOver,
+                                    RelativeSource={RelativeSource Self},
+                                    Converter={local:DescriptionConverter},
+                                    ConverterParameter=todo}"/>
+                        </StackPanel>
+                    </local:GroupBoxCustomControl>
+                    <local:GroupBoxCustomControl
+                        Style ="{StaticResource checkGroupBoxStyle}"
+                        IsInteractable="{Binding IsInstrumentGenerationEnabled}"
+                        Margin="0 0 0 5"
+                        IsOpen="{Binding IsInstrumentGenerationNoiseGroupBoxOpen, Mode=TwoWay}"
+                        Title="noise">
+                        <StackPanel 
+                            HorizontalAlignment="Stretch">
+                            <local:LabelledSlider
+                                x:Name="noiseSamplingFrequencySlider"
+                                Margin="0 5"
+                                DataContext="{Binding NoiseSamplingFrequency}"
+                                MinimumValue="{Binding Minimum}"
+                                MaximumValue="{Binding Maximum}"
+                                Value="{Binding Value, Mode=TwoWay}"
+                                Label="sampling frequency"
+                                Text="{Binding Value, Converter={local:SliderValueToStringConverter}, ConverterParameter=frequency}"
+                                IsInteractable="{Binding DataContext.IsInstrumentGenerationEnabled, ElementName=instrumentBuilder}"
+                                local:DescriptionProperty.Value="{Binding IsMouseOver,
+                                    RelativeSource={RelativeSource Self},
+                                    Converter={local:DescriptionConverter},
+                                    ConverterParameter=todo}"/>
+                        </StackPanel>
+                    </local:GroupBoxCustomControl>
+                    <Grid
+                        VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions >
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button
+                            x:Name="updateInsturmentButton"
+                            Command="{Binding UpdateInstrumentCommand}"
+                            Content="update"
+                            HorizontalAlignment="Stretch"
+                            Margin="0 0 2 0"
+                            Grid.Column="0"
+                            IsEnabled="{Binding IsInstrumentGenerationEnabled}"
+                            local:DescriptionProperty.Value="{Binding IsMouseOver,
+                                ElementName=updateInsturmentButton,
+                                Converter={local:DescriptionConverter},
+                                ConverterParameter=instrument_generate_instrument}"/>
+                        <Button
+                            x:Name="clearInstrumentButton"
+                            Command="{Binding ClearInstrumentCommand}"
+                            Content="clear"
+                            Grid.Column="1"
+                            Margin="2 0 0 0"
+                            HorizontalAlignment="Stretch"
+                            IsEnabled="{Binding IsInstrumentClearingEnabled}"
+                            local:DescriptionProperty.Value="{Binding IsMouseOver,
+                                ElementName=clearInstrumentButton,
+                                Converter={local:DescriptionConverter},
+                                ConverterParameter=instrument_generate_instrument}"/>
+                    </Grid>
+                </StackPanel>
+            </local:GroupBoxCustomControl>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

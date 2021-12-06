@@ -1,0 +1,143 @@
+﻿<UserControl 
+    x:Class="SpectralSynthesizer.NoteView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:SpectralSynthesizer"
+    x:Name="noteView"
+    mc:Ignorable="d" 
+    d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <local:PlaceholderTextGrid
+            Panel.ZIndex="1"
+            Visibility="{Binding IsContentLoaded,  ElementName=noteView, Converter={local:BooleanToHiddenVisibilityConverter}, ConverterParameter=_}"
+            Text="{Binding NoteGenerationStatus, Converter={local:NoteGenerationStatusToStringConverter}}"/>
+        <local:AudioBufferBorderCustomControl
+            State="{Binding State}"
+            LeftClickCommand="{Binding LeftClickCommand}"
+            DataContext="{Binding NoteAudioBufferDataContext, ElementName=noteView}"
+            Margin="2 2 2 0"
+            Visibility="{Binding IsContentLoaded, ElementName=noteView, Converter={local:BooleanToHiddenVisibilityConverter}}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition
+                        Width="*"
+                        MinWidth="{x:Static local:ProjectViewModel.MinimumSplitWidth}"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition 
+                        Width="*"
+                        MinWidth="{x:Static local:ProjectViewModel.MinimumSplitWidth}"/>
+                </Grid.ColumnDefinitions>
+                <!-- left column -->
+                <local:AudioBufferBorderCustomControl
+                    State="{Binding State}"
+                    LeftClickCommand="{Binding LeftClickCommand}"
+                    DataContext="{Binding SinusoidAudioBufferDataContext, ElementName=noteView}"
+                    Margin="0 0 2 0"
+                    Visibility="{Binding SinusoidViewDataContext.IsContentLoaded,ElementName=noteView,  Converter={local:BooleanToCollapsedVisibilityConverter}}"
+                    Grid.Column="0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock
+                            Grid.Row="0"
+                            HorizontalAlignment="Left"
+                            Margin="1 0 0 2"
+                            Text="sinusoid"/>
+                        <local:RulerView
+                            Grid.Row="1"
+                            Margin="30 0 0 0"
+                            DataContext="{Binding SinusoidRulerViewDataContext, ElementName=noteView}"/>
+                        <local:SpectogramView
+                            Grid.Row="2"
+                            DataContext="{Binding SinusoidViewDataContext, ElementName=noteView}"/>
+                    </Grid>
+                </local:AudioBufferBorderCustomControl>
+                <!-- column splitter -->
+                <GridSplitter 
+                    Grid.Column="1"
+                    Width="{StaticResource SplitterSizeDouble}"
+                    HorizontalAlignment="Stretch"
+                    Background="{StaticResource BackgroundIntermediateBrush}"/>
+                <!-- right column -->
+                <Grid
+                    Grid.Column="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition 
+                            Height="*" 
+                            MinHeight="{x:Static local:ProjectViewModel.MinimumSmallSplitHeight}"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition 
+                            Height="*"
+                            MinHeight="{x:Static local:ProjectViewModel.MinimumSmallSplitHeight}"/>
+                    </Grid.RowDefinitions>
+                    <!-- upper right row -->
+                    <local:AudioBufferBorderCustomControl
+                        State="{Binding State}"
+                        LeftClickCommand="{Binding LeftClickCommand}"
+                        DataContext="{Binding TransientAudioBufferDataContext, ElementName=noteView}"
+                        Margin="2 0 0 2"
+                        Visibility="{Binding TransientViewDataContext.IsContentLoaded,ElementName=noteView,  Converter={local:BooleanToCollapsedVisibilityConverter}}"
+                        Grid.Row="0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock
+                                Grid.Row="0"
+                                HorizontalAlignment="Left"
+                                Margin="1 0 0 2"
+                                Text="transient"/>
+                            <local:RulerView
+                                Grid.Row="1"
+                                DataContext="{Binding TransientRulerViewDataContext, ElementName=noteView}"/>
+                            <local:WaveView
+                                Grid.Row="2"
+                                DataContext="{Binding TransientViewDataContext, ElementName=noteView}"/>
+                        </Grid>
+                    </local:AudioBufferBorderCustomControl>
+                    <!-- row splitter -->
+                    <GridSplitter 
+                        Grid.Row="1"
+                        Height="{StaticResource SplitterSizeDouble}"
+                        HorizontalAlignment="Stretch"
+                        Background="{StaticResource BackgroundIntermediateBrush}"/>
+                    <!-- lower right row -->
+                    <local:AudioBufferBorderCustomControl
+                        State="{Binding State}"
+                        LeftClickCommand="{Binding LeftClickCommand}"
+                        DataContext="{Binding NoiseAudioBufferDataContext, ElementName=noteView}"
+                        Visibility="{Binding NoiseViewDataContext.IsContentLoaded, ElementName=noteView, Converter={local:BooleanToCollapsedVisibilityConverter}}"
+                        Margin="2 2 0 0"
+                        Grid.Row="2">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock
+                                Grid.Row="0"
+                                HorizontalAlignment="Left"
+                                Margin="1 0 0 2"
+                                Text="noise"/>
+                            <local:RulerView
+                                Grid.Row="1"
+                                DataContext="{Binding NoiseRulerViewDataContext, ElementName=noteView}"/>
+                            <local:WaveView
+                                Grid.Row="2"
+                                DataContext="{Binding NoiseViewDataContext, ElementName=noteView}"/>
+                        </Grid>
+                    </local:AudioBufferBorderCustomControl>
+                </Grid>
+
+            </Grid>
+        </local:AudioBufferBorderCustomControl>
+    </Grid>
+</UserControl>

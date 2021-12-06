@@ -1,0 +1,267 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:SpectralSynthesizer">
+
+    <!-- Base Button -->
+    <Style TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="{StaticResource BackgroundIntermediateBrush}"/>
+        <Setter Property="Foreground" Value="{Binding ProjectViewModel.Theme,
+                        Source={x:Static local:ViewModelLocator.Instance},
+                        Converter={local:ApplicationThemeToBackgroundColorConverter}}"/>
+        <Setter Property="FontFamily" Value="{StaticResource RobotoCondensedRegular}"/>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeS}"/>
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate  TargetType="{x:Type Button}">
+                    <Border 
+                        Padding="1"
+                        Background="{TemplateBinding Foreground}" 
+                        CornerRadius="0">
+                        <Border Background="{TemplateBinding Background}">
+                            <TextBlock 
+                                x:Name="textblockPresenter" 
+                                Text="{TemplateBinding Content}" 
+                                Focusable="False" 
+                                FontFamily="{TemplateBinding FontFamily}"
+                                Margin="{TemplateBinding Padding}"
+                                FontSize="{TemplateBinding FontSize}"
+                                Foreground="{TemplateBinding Foreground}"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource ForegroundLightBrush}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{StaticResource ForegroundDarkBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Empty Button-->
+    <Style x:Key="EmptyButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate  
+                    TargetType="{x:Type Button}">
+                    <ContentPresenter Content="{TemplateBinding Content}"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Borderless Button-->
+    <Style x:Key="BorderlessButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{Binding ProjectViewModel.Theme,
+                        Source={x:Static local:ViewModelLocator.Instance},
+                        Converter={local:ApplicationThemeToBackgroundColorConverter}}"/>
+        <Setter Property="Padding" Value="10 7"/>
+        <Setter Property="FontFamily" Value="{StaticResource RobotoCondensedRegular}"/>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeS}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate  
+                    TargetType="{x:Type Button}">
+                    <Border 
+                        Background="Transparent">
+                        <TextBlock 
+                            x:Name="textblockPresenter" 
+                            Text="{TemplateBinding Content}" 
+                            Focusable="False" 
+                            FontFamily="{TemplateBinding FontFamily}"
+                            FontSize="{TemplateBinding FontSize}"
+                            Foreground="{TemplateBinding Foreground}"
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource ForegroundLightBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Menu Button -->
+    <Style x:Key="MenuButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="FontFamily" Value="{StaticResource RobotoCondensedRegular}"/>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeS}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate  
+                    TargetType="{x:Type Button}">
+                    <Border 
+                        Background="{TemplateBinding Background}"
+                        Padding="{TemplateBinding Padding}">
+                        <Grid>
+                            <TextBlock 
+                                x:Name="textblockPresenter" 
+                                Text="{TemplateBinding Content}" 
+                                Focusable="False" 
+                                FontFamily="{TemplateBinding FontFamily}"
+                                FontSize="{TemplateBinding FontSize}"
+                                Foreground="{TemplateBinding Foreground}"
+                                Background="{TemplateBinding Background}"
+                                Visibility="{TemplateBinding IsMouseOver, Converter={local:BooleanToCollapsedVisibilityConverter}, ConverterParameter=_  }"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            <TextBlock 
+                                x:Name="mouseoverversion" 
+                                Text="{TemplateBinding Content}" 
+                                Focusable="False" 
+                                FontFamily="{TemplateBinding FontFamily}"
+                                FontSize="{TemplateBinding FontSize}"
+                                Foreground="{StaticResource ForegroundLightBrush}"
+                                Background="{TemplateBinding Background}"
+                                Visibility="{TemplateBinding IsMouseOver, Converter={local:BooleanToCollapsedVisibilityConverter} }"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Window Button -->
+    <Style x:Key="WindowButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{StaticResource ForegroundDarkBrush}"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="FontFamily" Value="{StaticResource RobotoCondensedRegular}"/>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeM}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate  
+                    TargetType="{x:Type Button}">
+                    <Border 
+                        Padding="{TemplateBinding Padding}"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="0">
+                        <TextBlock 
+                            x:Name="textblockPresenter" 
+                            Text="{TemplateBinding Content}" 
+                            Focusable="False" 
+                            FontFamily="{TemplateBinding FontFamily}"
+                            FontSize="{TemplateBinding FontSize}"
+                            Foreground="{TemplateBinding Foreground}"
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource ForegroundLightBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    
+    <!-- LoadingWindow Button -->
+    <Style x:Key="LoadingWindowButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="{StaticResource BackgroundDarkBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource ForegroundDarkBrush}"/>
+        <Setter Property="FontFamily" Value="{StaticResource RobotoCondensedRegular}"/>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeS}"/>
+        <Setter Property="Focusable" Value="false"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate  TargetType="{x:Type Button}">
+                    <Border
+                        Padding="1"
+                        Background="{TemplateBinding Foreground}"
+                        CornerRadius="0">
+                        <Border Background="{TemplateBinding Background}">
+                            <TextBlock 
+                                x:Name="textblockPresenter" 
+                                Text="{TemplateBinding Content}" 
+                                Focusable="False" 
+                                FontFamily="{TemplateBinding FontFamily}"
+                                Margin="15 2"
+                                FontSize="{TemplateBinding FontSize}"
+                                Foreground="{TemplateBinding Foreground}"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource ForegroundLightBrush}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{StaticResource ForegroundDarkBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Selection Box Button-->
+    <Style x:Key="SelectionBoxButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{Binding ProjectViewModel.Theme,
+                        Source={x:Static local:ViewModelLocator.Instance},
+                        Converter={local:ApplicationThemeToBackgroundColorConverter}}"/>
+        <Setter Property="Padding" Value="10 7"/>
+        <Setter Property="FontFamily" Value="{StaticResource RobotoCondensedRegular}"/>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeS}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate  TargetType="{x:Type Button}">
+                    <Border Background="Transparent">
+                        <Grid>
+                            <TextBlock 
+                            x:Name="textblockPresenter" 
+                            Text="{TemplateBinding Content}" 
+                            Focusable="False" 
+                            FontFamily="{TemplateBinding FontFamily}"
+                            FontSize="{TemplateBinding FontSize}"
+                            Foreground="{TemplateBinding Foreground}"
+                            Visibility="{TemplateBinding IsMouseOver, Converter={local:BooleanToCollapsedVisibilityConverter}, ConverterParameter=_}"
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            <TextBlock 
+                                Text="{TemplateBinding Content}" 
+                                Focusable="False" 
+                                Visibility="{TemplateBinding IsMouseOver, Converter={local:BooleanToCollapsedVisibilityConverter}}"
+                                FontFamily="{TemplateBinding FontFamily}"
+                                FontSize="{TemplateBinding FontSize}"
+                                Foreground="{StaticResource ForegroundLightBrush}"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

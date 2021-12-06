@@ -1,0 +1,154 @@
+﻿<ui:ScrollableZoomableView 
+    xmlns:ui="clr-namespace:SpectralSynthesizer.UI"
+    x:Class="SpectralSynthesizer.MidiView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:SpectralSynthesizer"
+    mc:Ignorable="d"   
+    x:Name="midiView"
+    d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid 
+            Visibility="{Binding IsContentLoaded, Converter={local:BooleanToHiddenVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <!--keyboard-->
+            <ScrollViewer
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Hidden"
+                Style="{StaticResource HiddenScrollViewerStyle}"
+                Background="{StaticResource BackgroundDarkBrush}"
+                x:Name="keyboardscrollviewer"
+                Panel.ZIndex="0" 
+                Grid.Column="0"
+                PreviewMouseWheel="keyboardscrollviewer_PreviewMouseWheel">
+                <ItemsControl 
+                    ItemsSource="{Binding KeyboardItems}" >
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel
+                                Orientation="Vertical" 
+                                Width="{Binding KeyboardWidth}"
+                                HorizontalAlignment="Left"
+                                Background="{StaticResource BackgroundDarkBrush}"
+                                VerticalAlignment="Stretch"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border 
+                                VerticalAlignment="Center"
+                                x:Name="rowgrid"
+                                HorizontalAlignment="Left"
+                                Width="{Binding Width}"
+                                Height="{Binding Height}"
+                                Padding=" 0 1">
+                                <Grid
+                                    Background="{Binding Color, Converter={local:ApplicationColorToSolidColorBrushConverter}}"/>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            <!-- midi -->
+            <ScrollViewer 
+                HorizontalScrollBarVisibility="Visible"
+                VerticalScrollBarVisibility="Visible"
+                Style="{StaticResource TwoDimensionalScrollViewer}"
+                Background="{StaticResource BackgroundDarkBrush}"
+                x:Name="scrollViewer"
+                Grid.Column="1"
+                Panel.ZIndex="0">
+                <Grid 
+                    x:Name="grid"
+                    Background="{StaticResource BackgroundDarkBrush}">
+                    <Grid.InputBindings>
+                        <MouseBinding Gesture="RightCLick" Command="{Binding ContentRightClickCommand}" CommandParameter="{Binding ElementName=grid}"/>
+                        <MouseBinding Gesture="LeftClick"  Command="{Binding ContentLeftClickCommand}"  CommandParameter="{Binding ElementName=grid}"/>
+                    </Grid.InputBindings>
+                    <!-- selection box -->
+                    <Grid 
+                        HorizontalAlignment="Left" 
+                        Visibility="{Binding IsSelectionInteractable, Converter={local:BooleanToCollapsedVisibilityConverter}}"
+                        Panel.ZIndex="0" 
+                        Margin="{Binding SelectionBoxMargin}" 
+                        Width="{Binding SelectionBoxWidth}" 
+                        Opacity="{Binding SelectionBoxOpacity}"  
+                        Background="{StaticResource BackgroundIntermediateBrush}"/>
+                    <!-- notes -->
+                    <ItemsControl
+                        ItemsSource="{Binding Notes}"
+                        Width="{Binding Length}"
+                        Panel.ZIndex="1"
+                        HorizontalAlignment="Left" >
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas 
+                                    Width="{Binding Length}"
+                                    Height="{Binding MidiHeight}"
+                                    HorizontalAlignment="Left"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border
+                                    Width="{Binding Width}"
+                                    Height="{Binding Height}"
+                                    Background="{StaticResource BackgroundLightBrush}"
+                                    Padding="0 1" >
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseEnter">
+                                            <i:InvokeCommandAction Command="{Binding MouseEnterCommand}" />
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="MouseLeave">
+                                            <i:InvokeCommandAction Command="{Binding MouseLeaveCommand}" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <Rectangle 
+                                        Width="{Binding SelectionWidth}"
+                                        Height="{Binding Height}"
+                                        HorizontalAlignment="Left"
+                                        Margin="{Binding SelectionMargin}"
+                                        Fill="{Binding Color, Converter={local:ApplicationColorToSolidColorBrushConverter}}"/>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemContainerStyle>
+                            <Style TargetType="ContentPresenter">
+                                <Setter Property="Canvas.Left" Value="{Binding PositionX}" />
+                                <Setter Property="Canvas.Bottom" Value="{Binding PositionY}" />
+                            </Style>
+                        </ItemsControl.ItemContainerStyle>
+                    </ItemsControl>
+                    <!-- highlighted note -->
+                    <TextBlock 
+                        Text="{Binding HighlightedNoteString}"
+                        Foreground="{Binding IsHighlightedNoteInSelectionRange, Converter={local:HighlightedNoteColorConverter}}" 
+                        Margin="{Binding HighlightedNoteMargin}" 
+                        Padding="3 2 3 0" 
+                        Visibility="{Binding HighlightedNoteString, Converter={local:NullOrEmptyStringToCollapsedVisibilityConverter}, ConverterParameter=_}"
+                        Background="{Binding IsHighlightedNoteInSelectionRange, Converter={local:HighlightedNoteColorConverter}, ConverterParameter=_}"
+                        VerticalAlignment="Bottom" 
+                        HorizontalAlignment="Left"
+                        Panel.ZIndex="2"/>
+                </Grid>
+            </ScrollViewer>
+            <TextBlock
+                Panel.ZIndex="3"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Padding="1 0"
+                Background="{StaticResource BackgroundDarkBrush}"
+                Foreground="{StaticResource ForegroundIntermediateBrush}"
+                Margin="5 8" 
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Text="{Binding FileName}"/>
+        </Grid>
+    </Grid>
+</ui:ScrollableZoomableView>

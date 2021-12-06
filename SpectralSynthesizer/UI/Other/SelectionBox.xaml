@@ -1,0 +1,66 @@
+﻿<UserControl x:Class="SpectralSynthesizer.SelectionBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SpectralSynthesizer"
+             mc:Ignorable="d" 
+             x:Name="selectionBox"
+    d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid 
+            Background="{Binding ProjectViewModel.Theme,
+                                 Source={x:Static local:ViewModelLocator.Instance},
+                                 Converter={local:ApplicationThemeToBackgroundColorConverter}}">
+            <Border
+                Margin="1"
+                Background="Transparent">
+                <Grid>
+                    <ScrollViewer    
+                        VerticalScrollBarVisibility="Visible"
+                        HorizontalScrollBarVisibility="Hidden"
+                        Style="{StaticResource ComboScrollViewer}"
+                        MaxHeight="{Binding ScrollHeight, ElementName=selectionBox}"
+                        Background="{StaticResource BackgroundIntermediateBrush}"
+                        Visibility="{Binding DataContext.Elements[0], ElementName=selectionBox, Converter={local:NullToCollapsedVisibilityConverter}}">
+                        <ItemsControl 
+                            ItemsSource="{Binding DataContext.Elements, ElementName=selectionBox}" >
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel 
+                                        Orientation="Vertical"
+                                        Width="{Binding ScrollWidth, ElementName=selectionBox}"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button
+                                        Style="{StaticResource SelectionBoxButtonStyle}"
+                                        HorizontalAlignment="Left" 
+                                        HorizontalContentAlignment="Left"
+                                        Margin="2"
+                                        Focusable="False"
+                                        Foreground="{Binding IsSelected, Converter={local:BooleanToSelectionBoxColorConverter}}"
+                                        Command="{Binding SelectCommand}"
+                                        Content="{Binding Name}"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                    <!-- n/a -->
+                    <Button
+                        Visibility="{Binding DataContext.Elements[0], ElementName=selectionBox, Converter={local:NullToCollapsedVisibilityConverter}, ConverterParameter=_}"
+                        Style="{StaticResource SelectionBoxButtonStyle}"
+                        Margin="2"
+                        Focusable="False"
+                        IsEnabled="False"
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Left" 
+                        Foreground="{StaticResource ForegroundDarkBrush}"
+                        HorizontalContentAlignment="Left"
+                        Content="n/a"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,67 @@
+﻿<ui:ScrollableZoomableView  
+    xmlns:ui="clr-namespace:SpectralSynthesizer.UI"
+    x:Class="SpectralSynthesizer.RulerView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:SpectralSynthesizer"
+    x:Name="rulerView"
+    mc:Ignorable="d" 
+    d:DesignHeight="450" d:DesignWidth="800">
+    <Grid
+        Visibility="{Binding IsContentLoaded, Converter={local:BooleanToHiddenVisibilityConverter}}">
+        <ScrollViewer
+            HorizontalScrollBarVisibility="Hidden"
+            VerticalScrollBarVisibility="Disabled"
+            Style="{StaticResource HiddenScrollViewerStyle}"
+            Background="{StaticResource BackgroundDarkBrush}"
+            x:Name="scrollViewer">
+            <ItemsControl 
+                ItemsSource="{Binding Items}" 
+                Margin="{Binding ContentMargin}"
+                Width="{Binding ContentWidth}"
+                HorizontalAlignment="Left">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas 
+                                    Width="{Binding ContentWidth}"
+                                    Height="{Binding Height}"
+                                    Background="Transparent"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+                            <Rectangle 
+                                            Width="1"
+                                            Height="{Binding Size}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Bottom"
+                                            Fill="{StaticResource ForegroundDarkBrush}"
+                                            Margin="0 0 2 2"/>
+                            <TextBlock
+                                            Text="{Binding Text}"
+                                            Background="Transparent"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Top"
+                                            Padding="0"
+                                            Margin="0 1 0 0"
+                                            FontSize="{StaticResource FontSizeS}"
+                                            Foreground="{StaticResource ForegroundDarkBrush}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="ContentPresenter">
+                        <Setter Property="Canvas.Left" Value="{Binding Position}" />
+                        <Setter Property="Canvas.Top" Value="0" />
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</ui:ScrollableZoomableView>

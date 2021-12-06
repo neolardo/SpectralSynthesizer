@@ -1,0 +1,97 @@
+﻿<UserControl x:Class="SpectralSynthesizer.AudioRendererDetailControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SpectralSynthesizer"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <ScrollViewer 
+        VerticalScrollBarVisibility="Hidden" 
+        HorizontalScrollBarVisibility="Disabled" 
+        Style="{StaticResource DetailScrollViewer}">
+        <StackPanel 
+            Margin="2 0">
+            <TextBlock
+                HorizontalAlignment="Center"
+                Text="AUDIO RENDERER"
+                FontFamily="{StaticResource RobotoCondensedLight}"
+                FontSize="{StaticResource FontSizeM}"
+                Foreground="{Binding ProjectViewModel.Theme,
+                            Source={x:Static local:ViewModelLocator.Instance},
+                            Converter={local:ApplicationThemeToBackgroundColorConverter}}"
+                Margin="0 20"
+                local:DescriptionProperty.Value="{Binding IsMouseOver,
+                    RelativeSource={RelativeSource Self},
+                    Converter={local:DescriptionConverter},
+                    ConverterParameter=audiorenderer}"/>
+            <TextBlock
+                x:Name="instrumentsTxt"
+                Text="instruments"
+                Margin="0 15 0 5"
+                AllowDrop="true"
+                HorizontalAlignment="Left"
+                Drop="InstrumentsCombo_Drop"
+                local:DescriptionProperty.Value="{Binding IsMouseOver,
+                            RelativeSource={RelativeSource Self},
+                            Converter={local:DescriptionConverter},
+                            ConverterParameter=audio_renderer_selection}"/>
+            <local:ComboBox
+                x:Name="instrumentCombo"
+                Margin="0 0 0 5"
+                AllowDrop="true"
+                Drop="InstrumentsCombo_Drop"
+                DataContext="{Binding InstrumentsComboBox}"
+                HorizontalAlignment="Stretch"
+                IsScrollOnlyVisibleOnHover="True"
+                ComboHeight="{Binding InstrumentsComboBoxHeight}"     
+                local:DescriptionProperty.Value="{Binding IsMouseOver,
+                            RelativeSource={RelativeSource Self},
+                            Converter={local:DescriptionConverter},
+                            ConverterParameter=audio_renderer_instruments}"/>
+            
+            <local:GroupBoxCustomControl
+                Margin="0 10 0 5"
+                IsOpen="{Binding IsRenderingGroupBoxOpen, Mode=TwoWay}"
+                Title="rendering">
+                <StackPanel 
+                    HorizontalAlignment="Stretch">
+                    <local:CheckBox
+                        MainColor="{Binding ProjectViewModel.Theme,
+                                            Source={x:Static local:ViewModelLocator.Instance},
+                                            Converter={local:ApplicationThemeToBackgroundColorConverter}}"
+                        Checked="{Binding RenderingSelectionOnly, Mode=TwoWay}"
+                        Enabled="{Binding IsRenderingEnabled}"
+                        Text="selected area"
+                        Margin="0 0 0 10"
+                        local:DescriptionProperty.Value="{Binding IsMouseOver,
+                            RelativeSource={RelativeSource Self},
+                            Converter={local:DescriptionConverter},
+                            ConverterParameter=audio_renderer_selection}"/>
+                    <local:CheckBox
+                        MainColor="{Binding ProjectViewModel.Theme,
+                                            Source={x:Static local:ViewModelLocator.Instance},
+                                            Converter={local:ApplicationThemeToBackgroundColorConverter}}"
+                        Checked="{Binding RenderingEnableSustain, Mode=TwoWay}"
+                        Enabled="{Binding IsRenderingEnabled}"
+                        Text="enable sustain"
+                        Margin="0 0 0 10"
+                        local:DescriptionProperty.Value="{Binding IsMouseOver,
+                            RelativeSource={RelativeSource Self},
+                            Converter={local:DescriptionConverter},
+                            ConverterParameter=audio_renderer_selection}"/>
+                    <Button
+                        Command="{Binding RenderCommand}"
+                        Content="render"
+                        HorizontalAlignment="Stretch"
+                        Margin="2 0"
+                        IsEnabled="{Binding IsRenderingEnabled}"
+                        local:DescriptionProperty.Value="{Binding IsMouseOver,
+                            RelativeSource={RelativeSource Self},
+                            Converter={local:DescriptionConverter},
+                            ConverterParameter=audio_renderer_render}"/>
+                </StackPanel>
+            </local:GroupBoxCustomControl>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

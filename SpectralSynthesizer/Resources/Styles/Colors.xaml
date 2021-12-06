@@ -1,0 +1,37 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:SpectralSynthesizer">
+    
+    <!-- Background Colors -->
+    <Color x:Key="BackgroundDark">#1D1D1D</Color>
+    <SolidColorBrush x:Key="BackgroundDarkBrush" Color="{StaticResource BackgroundDark}"/>
+    <Color x:Key="BackgroundIntermediate">#2A2A2A</Color>
+    <SolidColorBrush x:Key="BackgroundIntermediateBrush" Color="{StaticResource BackgroundIntermediate}"/>
+    <Color x:Key="BackgroundLight">#3B3B3B</Color>
+    <SolidColorBrush x:Key="BackgroundLightBrush" Color="{StaticResource BackgroundLight}"/>
+
+    <!-- Foreground Colors -->
+    <Color x:Key="ForegroundDark">#6B6B6B</Color>
+    <SolidColorBrush x:Key="ForegroundDarkBrush" Color="{StaticResource ForegroundDark}"/>
+    <Color x:Key="ForegroundIntermediate">#BBBBBB</Color>
+    <SolidColorBrush x:Key="ForegroundIntermediateBrush" Color="{StaticResource ForegroundIntermediate}"/>
+    <Color x:Key="ForegroundLight">#DDDDDD</Color>
+    <SolidColorBrush x:Key="ForegroundLightBrush" Color="{StaticResource ForegroundLight}"/>
+
+    <!-- Theme Colors -->
+    <Color x:Key="ThemeMisty">#3D98C7</Color>
+    <SolidColorBrush x:Key="ThemeMistyBrush" Color="{StaticResource ThemeMisty}"/>
+    <Color x:Key="ThemeNeon">#45CA3C</Color>
+    <SolidColorBrush x:Key="ThemeNeonBrush" Color="{StaticResource ThemeNeon}"/>
+    <Color x:Key="ThemeExotic">#CD9245</Color>
+    <SolidColorBrush x:Key="ThemeExoticBrush" Color="{StaticResource ThemeExotic}"/>
+    <Color x:Key="ThemeRadiant">#CDBa33</Color>
+    <SolidColorBrush x:Key="ThemeRadiantBrush" Color="{StaticResource ThemeRadiant}"/>
+    <Color x:Key="ThemePretty">#CA72A0</Color>
+    <SolidColorBrush x:Key="ThemePrettyBrush" Color="{StaticResource ThemePretty}"/>
+
+    <!--Other-->
+    <Color x:Key="BackgroundIntermediateDouble">#404040</Color>
+    <SolidColorBrush x:Key="BackgroundIntermediateDoubleBrush" Color="{StaticResource BackgroundIntermediateDouble}"/>
+
+</ResourceDictionary>

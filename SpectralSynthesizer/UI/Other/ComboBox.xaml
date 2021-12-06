@@ -1,0 +1,227 @@
+﻿<UserControl x:Class="SpectralSynthesizer.ComboBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SpectralSynthesizer"
+             mc:Ignorable="d"
+             x:Name="combo"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <!--disabled content-->
+        <Grid Background="{StaticResource ForegroundDarkBrush}"
+              Visibility="{Binding Enabled, Converter={local:BooleanToCollapsedVisibilityConverter}, ConverterParameter=_, ElementName=combo}">
+            <Grid Panel.ZIndex="0" Visibility="{Binding IsScrollOnlyVisibleOnHover, Converter={local:BooleanToCollapsedVisibilityConverter}, ElementName=combo}">
+                <Border
+                    Panel.ZIndex="0" 
+                    Margin="1"
+                    MinWidth="{Binding ComboMinimumWidth, ElementName=combo}"
+                    MaxWidth="{Binding ComboWidth, ElementName=combo}"
+                    Background="{StaticResource BackgroundIntermediateBrush}"
+                    Visibility="{Binding SelectedElement,  Converter={local:NullToCollapsedVisibilityConverter}}">
+                    <Button
+                        Style="{StaticResource SelectionBoxButtonStyle}"
+                        Margin="2"
+                        HorizontalAlignment="Left" 
+                        HorizontalContentAlignment="Left"
+                        Focusable="False"
+                        Foreground="{StaticResource ForegroundDarkBrush}"
+                        Content="{Binding SelectedElementName}"/>
+                </Border>
+            </Grid>
+            <!-- always showing type -->
+            <Grid Panel.ZIndex="1" Visibility="{Binding IsScrollOnlyVisibleOnHover, Converter={local:BooleanToCollapsedVisibilityConverter}, ConverterParameter=_, ElementName=combo}">
+                <Border
+                        Panel.ZIndex="0"
+                        MaxWidth="{Binding ComboWidth, ElementName=combo}"
+                        MinWidth="{Binding ComboMinimumWidth, ElementName=combo}"
+                        Margin="1"
+                        Background="Transparent">
+                    <Grid>
+                        <ScrollViewer   
+                            VerticalScrollBarVisibility="Visible"
+                            HorizontalScrollBarVisibility="Hidden"
+                            Style="{StaticResource ComboScrollViewer}"
+                            MaxHeight="{Binding ComboHeight, ElementName=combo}"
+                            Background="{StaticResource BackgroundIntermediateBrush}">
+                            <ItemsControl ItemsSource="{Binding Elements}" >
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Vertical"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button
+                                            Style="{StaticResource SelectionBoxButtonStyle}"
+                                            Margin="2"
+                                            Focusable="False"
+                                            HorizontalAlignment="Left" 
+                                            HorizontalContentAlignment="Left"
+                                            Foreground="{StaticResource ForegroundDarkBrush}"
+                                            IsEnabled="False"
+                                            Content="{Binding Name}"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                        <Button
+                            Panel.ZIndex="2"
+                            Style="{StaticResource SelectionBoxButtonStyle}"
+                            Margin="2"
+                            Visibility="{Binding IsElementsListEmpty, Converter={local:BooleanToCollapsedVisibilityConverter}}"
+                            Focusable="False"
+                            IsEnabled="False"
+                            Foreground="{StaticResource ForegroundDarkBrush}"
+                            HorizontalAlignment="Left" 
+                            VerticalAlignment="Top"
+                            HorizontalContentAlignment="Left"
+                            Content="n/a"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+        <!--enabled content-->
+        <Grid 
+            Background="{Binding ProjectViewModel.Theme,
+                                Source={x:Static local:ViewModelLocator.Instance},
+                                Converter={local:ApplicationThemeToBackgroundColorConverter}}"
+            Visibility="{Binding Enabled, Converter={local:BooleanToCollapsedVisibilityConverter}, ElementName=combo}">
+            <!-- on hover type -->
+            <Grid 
+                Visibility="{Binding IsScrollOnlyVisibleOnHover, Converter={local:BooleanToCollapsedVisibilityConverter}, ElementName=combo}">
+                <Border
+                    Panel.ZIndex="0"
+                    MaxWidth="{Binding ComboWidth, ElementName=combo}"
+                    MinWidth="{Binding ComboMinimumWidth, ElementName=combo}"
+                    Visibility="{Binding IsMouseOver, 
+                                     ElementName=combo, 
+                                     Converter={local:BooleanToCollapsedVisibilityConverter}}"
+                    Margin="1"
+                    Background="Transparent">
+    
+                    <ScrollViewer    
+                        VerticalScrollBarVisibility="Visible"
+                        HorizontalScrollBarVisibility="Hidden"
+                        Style="{StaticResource ComboScrollViewer}"
+                        MaxHeight="{Binding ComboHeight, ElementName=combo}"
+                        Background="{StaticResource BackgroundIntermediateBrush}">
+                        <ItemsControl 
+                            ItemsSource="{Binding Elements}" >
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel 
+                                        Orientation="Vertical"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button
+                                        Style="{StaticResource SelectionBoxButtonStyle}"
+                                        Margin="2"
+                                        HorizontalAlignment="Left" 
+                                        HorizontalContentAlignment="Left"
+                                        Foreground="{Binding IsSelected, Converter={local:BooleanToSelectionBoxColorConverter}}"
+                                        Command="{Binding SelectCommand}"
+                                        Visibility="{Binding IsMouseOver, 
+                                                    ElementName=combo, 
+                                                    Converter={local:BooleanToCollapsedVisibilityConverter}}"
+                                        Focusable="False"
+                                        Content="{Binding Name}"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Border>
+                <Border
+                    Panel.ZIndex="1" 
+                    Margin="1"
+                    MinWidth="{Binding ComboMinimumWidth, ElementName=combo}"
+                    MaxWidth="{Binding ComboWidth, ElementName=combo}"
+                    Visibility="{Binding IsMouseOver, ElementName=combo, Converter={local:BooleanToCollapsedVisibilityConverter}, ConverterParameter=_}">
+                    <Border  
+                        Background="{StaticResource BackgroundIntermediateBrush}">
+                        <Button
+                            Style="{StaticResource SelectionBoxButtonStyle}"
+                            Margin="2"
+                            HorizontalAlignment="Left" 
+                            HorizontalContentAlignment="Left"
+                            Focusable="False"
+                            Foreground="{Binding SelectedElement, Converter={local:NullToSelectionColorConverter}}"
+                            Content="{Binding SelectedElementName}"/>
+                    </Border>
+                </Border>
+                <Border
+                    MaxWidth="{Binding ComboWidth, ElementName=combo}"
+                    MinWidth="{Binding ComboMinimumWidth, ElementName=combo}"
+                    Panel.ZIndex="2"
+                    Margin="1"
+                    Visibility="{Binding IsElementsListEmpty, Converter={local:BooleanToCollapsedVisibilityConverter}}" >
+                    <Button
+                        Style="{StaticResource SelectionBoxButtonStyle}"
+                        Margin="2"
+                        Focusable="False"
+                        Foreground="{StaticResource ForegroundDarkBrush}"
+                        HorizontalAlignment="Left" 
+                        VerticalAlignment="Top"
+                        IsEnabled="False"
+                        HorizontalContentAlignment="Left"
+                        Content="n/a"/>
+                </Border>
+            </Grid>
+
+            <!-- always showing type -->
+            <Grid Visibility="{Binding IsScrollOnlyVisibleOnHover, Converter={local:BooleanToCollapsedVisibilityConverter}, ConverterParameter=_, ElementName=combo}">
+                <Border
+                    Panel.ZIndex="0"
+                    MaxWidth="{Binding ComboWidth, ElementName=combo}"
+                    MinWidth="{Binding ComboMinimumWidth, ElementName=combo}"
+                    Margin="1"
+                    Background="Transparent">
+                    <Grid>
+                        <ScrollViewer    
+                            VerticalScrollBarVisibility="Visible"
+                            HorizontalScrollBarVisibility="Hidden"
+                            Style="{StaticResource ComboScrollViewer}"
+                            MaxHeight="{Binding ComboHeight, ElementName=combo}"
+                            Background="{StaticResource BackgroundIntermediateBrush}">
+                            <ItemsControl ItemsSource="{Binding Elements}" >
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Vertical" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button
+                                            Style="{StaticResource SelectionBoxButtonStyle}"
+                                            Margin="2"
+                                            Focusable="False"
+                                            HorizontalAlignment="Left" 
+                                            HorizontalContentAlignment="Left"
+                                            Foreground="{Binding IsSelected, Converter={local:BooleanToSelectionBoxColorConverter}}"
+                                            Command="{Binding SelectCommand}"
+                                            IsEnabled="{Binding IsEnabled}"
+                                            Content="{Binding Name}"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                        <Button
+                            Panel.ZIndex="2"
+                            Style="{StaticResource SelectionBoxButtonStyle}"
+                            Margin="2"
+                            Visibility="{Binding IsElementsListEmpty, Converter={local:BooleanToCollapsedVisibilityConverter}}"
+                            Focusable="False"
+                            IsEnabled="False"
+                            Foreground="{StaticResource ForegroundDarkBrush}"
+                            HorizontalAlignment="Left" 
+                            VerticalAlignment="Top"
+                            HorizontalContentAlignment="Left"
+                            Content="n/a"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

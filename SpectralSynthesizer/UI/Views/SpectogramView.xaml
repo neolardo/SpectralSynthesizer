@@ -1,0 +1,166 @@
+﻿<ui:ScrollableZoomableView 
+    xmlns:ui="clr-namespace:SpectralSynthesizer.UI"
+    x:Class="SpectralSynthesizer.SpectogramView"
+    x:Name="spectogramView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:SpectralSynthesizer"
+    mc:Ignorable="d" 
+    d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid 
+            Visibility="{Binding IsContentLoaded, Converter={local:BooleanToHiddenVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <!--frequency ruler-->
+            <ScrollViewer
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Hidden"
+                Style="{StaticResource HiddenScrollViewerStyle}"
+                Background="{StaticResource BackgroundDarkBrush}"
+                x:Name="frequencyRulerScrollViewer"
+                Panel.ZIndex="0" 
+                Grid.Column="0"
+                PreviewMouseWheel="frequencyRulerScrollViewer_PreviewMouseWheel">
+                <ItemsControl 
+                    ItemsSource="{Binding FrequencyRulerItems}" 
+                    x:Name="rulerItemsControl"
+                    Height="{Binding Height}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel
+                                Orientation="Vertical"
+                                Width="{Binding FrequencyRulerWidth}"
+                                Height="{Binding Height}"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Bottom"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid
+                                Width="{Binding ElementName=rulerItemsControl, Path=DataContext.FrequencyRulerWidth}"
+                                Height="{Binding ElementName=rulerItemsControl, Path=DataContext.FrequencyRulerItemHeight}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock
+                                    VerticalAlignment="Bottom"
+                                    HorizontalAlignment="Right"
+                                    Grid.Row="0"
+                                    Padding="1"
+                                    Text="{Binding Text}"
+                                    Foreground="{Binding Color, Converter={local:ApplicationColorToSolidColorBrushConverter}}"/>
+                                <Border
+                                    Grid.Row="1"
+                                    VerticalAlignment="Bottom"
+                                    HorizontalAlignment="Stretch"
+                                    Background="{Binding Color, Converter={local:ApplicationColorToSolidColorBrushConverter}}"
+                                    Height="{Binding ElementName=rulerItemsControl, Path=DataContext.SpectogramLineInnerThickness}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            <!-- trajectories -->
+            <ScrollViewer 
+                HorizontalScrollBarVisibility="Visible"
+                VerticalScrollBarVisibility="Hidden"
+                Style="{StaticResource TwoDimensionalScrollViewer}"
+                Background="{StaticResource BackgroundDarkBrush}"
+                x:Name="scrollViewer"
+                Grid.Column="1"
+                Panel.ZIndex="0">
+                <Grid 
+                    x:Name="grid"
+                    Height="{Binding Height}"
+                    Background="{StaticResource BackgroundDarkBrush}" >
+                    <Grid.InputBindings>
+                        <MouseBinding Gesture="RightCLick" Command="{Binding ContentRightClickCommand}" CommandParameter="{Binding ElementName=grid}"/>
+                        <MouseBinding Gesture="LeftClick" Command="{Binding ContentLeftClickCommand}" CommandParameter="{Binding ElementName=grid}"/>
+                    </Grid.InputBindings>
+                    <!-- selection box -->
+                    <Grid 
+                        HorizontalAlignment="Left" 
+                        Visibility="{Binding IsSelectionInteractable, Converter={local:BooleanToCollapsedVisibilityConverter}}"
+                        Panel.ZIndex="0" 
+                        Margin="{Binding SelectionBoxMargin}" 
+                        Width="{Binding SelectionBoxWidth}" 
+                        Opacity="{Binding SelectionBoxOpacity}"  
+                        Background="{StaticResource BackgroundIntermediateBrush}"/>
+                    <!-- trajectories -->
+                    <!-- inner lines -->
+                    <ItemsControl
+                        x:Name="trajectoryInnerLinesItemsControl"
+                        ItemsSource="{Binding Trajectories}"
+                        Width="{Binding Length}"
+                        Height="{Binding Height}"
+                        Panel.ZIndex="2"
+                        HorizontalAlignment="Left" >
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas 
+                                    Width="{Binding Length}"
+                                    Height="{Binding Height}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Bottom"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Polyline
+                                    Points="{Binding Points, Converter={local:ObservableCollectionToPointCollectionConverter}, UpdateSourceTrigger=PropertyChanged}"
+                                    StrokeThickness="{Binding ElementName=trajectoryInnerLinesItemsControl, Path=DataContext.SpectogramLineInnerThickness}"
+                                    Stroke="{Binding Color, Converter={local:ApplicationColorToSolidColorBrushConverter}}">
+                                </Polyline>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <!-- outer lines -->
+                    <ItemsControl
+                        x:Name="trajectoryOuterLinesItemsControl"
+                        ItemsSource="{Binding Trajectories}"
+                        Width="{Binding Length}"
+                        Height="{Binding Height}"
+                        Panel.ZIndex="2"
+                        HorizontalAlignment="Left"
+                        Background="Transparent">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas 
+                                    Width="{Binding Length}"
+                                    Height="{Binding Height}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Bottom"
+                                    Background="Transparent"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Polyline
+                                    Points="{Binding Points, Converter={local:ObservableCollectionToPointCollectionConverter}, UpdateSourceTrigger=PropertyChanged}"
+                                    StrokeThickness="{Binding ElementName=trajectoryOuterLinesItemsControl, Path=DataContext.SpectogramLineOuterThickness}"
+                                    Stroke="Transparent">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseEnter">
+                                            <i:InvokeCommandAction Command="{Binding MouseEnterCommand}"/>
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="MouseLeave">
+                                            <i:InvokeCommandAction Command="{Binding MouseLeaveCommand}" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </Polyline>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</ui:ScrollableZoomableView >

@@ -1,0 +1,45 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:SpectralSynthesizer" 
+                    xmlns:System="clr-namespace:System;assembly=mscorlib">
+
+    <!-- FontFamily -->
+    <FontFamily x:Key="RobotoCondensedRegular">pack://application;,,,/Resources/Fonts/#Roboto Condensed Regular</FontFamily>
+    <FontFamily x:Key="RobotoCondensedLight">pack://application;,,,/Resources/Fonts/#Roboto Condensed Light</FontFamily>
+
+    <!--FontSize-->
+    <System:Double x:Key="FontSizeXS">10</System:Double>
+    <System:Double x:Key="FontSizeS">12</System:Double>
+    <System:Double x:Key="FontSizeM">16</System:Double>
+    <System:Double x:Key="FontSizeL">20</System:Double>
+    <System:Double x:Key="FontSizeXL">24</System:Double>
+    <System:Double x:Key="SplitterSizeDouble">4</System:Double>
+
+    <!-- Slider Maximum -->
+    <System:Double x:Key="SliderMaximum">20</System:Double>
+
+    <!--Splitter Size-->
+    <GridLength x:Key="SplitterSize">4</GridLength>
+    
+    <!-- Basic font style for controls -->
+    <Style x:Key="BaseStyle" TargetType="{x:Type Control}">
+        <Setter Property="FontFamily" Value="{StaticResource RobotoCondensedRegular}"/>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeS}"/>
+        <Setter Property="Foreground" Value="{StaticResource ForegroundIntermediateBrush}"/>
+    </Style>
+
+    <!-- Basic font style for textblocks -->
+    <Style TargetType="{x:Type TextBlock}">
+        <Setter Property="FontFamily" Value="{StaticResource RobotoCondensedRegular}"/>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeS}"/>
+        <Setter Property="Foreground" Value="{StaticResource ForegroundIntermediateBrush}"/>
+    </Style>
+
+    <!-- Basic font style for textblocks -->
+    <Style x:Key="TitleTextblockStyle" TargetType="{x:Type TextBlock}">
+        <Setter Property="FontFamily" Value="{StaticResource RobotoCondensedLight}"/>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeS}"/>
+        <Setter Property="Foreground" Value="{StaticResource BackgroundLightBrush}"/>
+    </Style>
+
+</ResourceDictionary>
